@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="vcp279" defaultIdMethod="native">
+	<table name="person" phpName="Person">
+		<column name="id" type="integer" require="true" primaryKey="true" autoIncrement="true"/>
+		<column name="first_name" type="varchar" size="255" required="true"/>
+		<column name="last_name" type="varchar" size="255" required="true"/>
+		<column name="email" type="varchar" size="255" required="true"/>
+		<column name="address" type="varchar" size="255" required="true"/>
+		<column name="student_id" type="varchar" size="25" required="true"/>
+		<column name="user_type" type="char" size="1" required="true"/>
+	</table>
+</database>
