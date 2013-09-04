@@ -5,8 +5,14 @@
 		<column name="first_name" type="varchar" size="255" required="true"/>
 		<column name="last_name" type="varchar" size="255" required="true"/>
 		<column name="email" type="varchar" size="255" required="true"/>
-		<column name="address" type="varchar" size="255" required="true"/>
+		<column name="address_line_one" type="varchar" size="255" required="false"/>
+		<column name="address_line_two" type="varchar" size="255" required="false"/>
+		<column name="state" type="varchar" size="2" required="false"/>
+		<column name="zip" type="integer" size="5" required="false"/>
 		<column name="student_id" type="varchar" size="25" required="true"/>
-		<column name="user_type" type="char" size="1" required="true"/>
+		<column name="user_type" type="ENUM" valueSet="A, S" required="true"/>
+		<foreign-key foreignTable="user_types" foreignSchema="/user_type-schema.xml">
+			<reference local="user_type" foreign="user_types"/>
+		</foreign-key>
 	</table>
 </database>
