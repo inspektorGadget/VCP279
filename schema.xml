@@ -10,9 +10,50 @@
 		<column name="state" type="varchar" size="2" required="false"/>
 		<column name="zip" type="integer" size="5" required="false"/>
 		<column name="student_id" type="varchar" size="25" required="true"/>
-		<column name="user_type" type="ENUM" valueSet="A, S" required="true"/>
-		<foreign-key foreignTable="user_types" foreignSchema="/user_type-schema.xml">
-			<reference local="user_type" foreign="user_types"/>
+		<foreign-key foreignTable="user_types">
+			<reference local="user_type" foreign="user_category"/>
 		</foreign-key>
+	</table>
+	
+	<table name="user_types" phpName="UserTypes">
+		<column name="user_category" type="ENUM" valueSet="A, S" />
+	</table>
+	
+	<table name="equipment" phpName="Equipment">
+		<colum name="id" type="integer" require="true" primaryKey="true" autoIncrement="true"/>
+		<column name="name" type="varchar" size="255" require="true"/>
+		<column name="serial" type="varchar" size="255" require="true"/>
+		<column name="purchase_date" type="date" require="false" />
+		<foreign-key foreignTable="equipment_status">
+			<reference local="item_status" foreign="status"/>
+		</foreign-key>
+		<column name="comments" type="longvarchar" require="false"/>
+	</table>
+	
+	<table name="equipment_status" phpName="equipmentStatus">
+		<column name="status" type="ENUM" valueSet="Rented, Repair, Broken"/>
+	</table>
+	
+	<table name="rentals" phpName="Rentals">
+		<column name="id" type="integer" require="true" primaryKey="true" autoIncrement="true"/>
+		<foreign-key foreignTable="person">
+			<reference local="student" foreign="id"/>	
+		<foreign-key/>
+		<foreign-key foreignTable="person">
+			<reference local="faculty" foreign="id"/>	
+		<foreign-key/>
+		<foreign-key foreignTable="equipment">
+			<reference local="item" foreign="id"/>	
+		<foreign-key/>
+		<column name="out_date" type="date" required="true"/>
+		<column name="due_date" type="date" required="true"/>
+		<foreign-key foreignTable="rental_status">
+			<reference local="status" foreign="status">
+		</foreign-key>
+		<column name="comments" type="longvarchar" require="false"/>
+	</table>
+	
+	<table name="rental_status" phpName="rentalStatus">
+		<column name="status" type="ENUM" valueSet="Current, Late"/>
 	</table>
 </database>
