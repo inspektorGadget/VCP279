@@ -56,4 +56,20 @@
 	<table name="rental_status" phpName="rentalStatus">
 		<column name="status" type="ENUM" valueSet="Current, Late"/>
 	</table>
+	
+	<table name="classes" phpName="Classes">
+		<column name="id" type="integer" require="true" primaryKey="true" autoIncrement="true"/>
+		<column name="class_id" type="varchar" size="10" require="true">
+		<column name="name" type="varchar" size="255" require="true">
+	</table>
+	
+	<table name="enrollment" phpName="Enrollment">
+		<column name="id" type="integer" require="true" primaryKey="true" autoIncrement="true"/>
+		<foreign-key foreignTable="person">
+			<reference local="student" foreign="id">
+		</foreign-key>
+		<foreign-key foreignTable="classes">
+			<reference local="class" foreign="id">
+		</foreign-key>
+	</table>
 </database>
