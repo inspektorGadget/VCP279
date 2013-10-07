@@ -11,6 +11,14 @@
 			<table>
 				<tr>
 					<td>
+						<label for"studentid">Student ID:</label>
+					</td>
+					<td>
+						<input type="text" name="studentid" id="studentid" value="<?php htmlout($studentid); ?>" />
+					</td>
+				</tr>
+				<tr>
+					<td>
 						<label for="firstname">First Name:</label>
 					</td>
 					<td>
@@ -63,9 +71,9 @@
 					</td>
 					<td>
 						<select name="type" id="type">
-							<option value="Admin">Admin</option>
-							<option value="Frontend">Frontend</option>
-							<option value="Student">Student</option>
+							<option value="Admin" <?php if ($row['type']=='Admin') {echo "selected=\"selected\"";}?>>Admin</option>
+							<option value="Frontend" <?php if ($row['type']=='Frontend') {echo "selected=\"selected\"";}?>>Frontend</option>
+							<option value="Student" <?php if ($row['type']=='Student') {echo "selected=\"selected\"";}?>>Student</option>
 						</select>
 					</td>
 				</tr>
@@ -75,8 +83,8 @@
 					</td>
 					<td>
 						<select name="status" id="status">
-							<option value="active">active</option>
-							<option value="disabled">disabled</option>
+							<option value="active" <?php if ($row['status']=='active') {echo "selected=\"selected\"";}?>>active</option>
+							<option value="disabled" <?php if ($row['status']=='disabled') {echo "selected=\"selected\"";}?>>disabled</option>
 						</select>
 					</td>
 				</tr>

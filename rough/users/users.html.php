@@ -19,7 +19,7 @@ include_once '../includes/helpers.inc.php';
 			<ul>
 			<?php foreach($users as $user): ?>
 				<li>
-					<form action="listUsers" method="post">
+					<form action="" method="post">
 						<table>
 							<tr>
 								<td><?php htmlout($user['firstname']); ?></td>
