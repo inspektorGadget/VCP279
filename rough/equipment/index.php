@@ -170,42 +170,42 @@ if (isset($_POST['action']) && $_POST['action'] == 'Delete') {
 	include '../includes/db.inc.php';
 	
 	try {
-		$sql = 'DELETE from person WHERE id = :id';
+		$sql = 'DELETE from equipment WHERE id = :id';
 		$s = $pdo->prepare($sql);
 		$s->bindValue(':id', $_POST['id']);
 		$s->execute();
 	}
 	catch(PDOException $e) {
-		$error = 'Error deleting user from database' . $e->getMessage();
+		$error = 'Error deleting equipment from database' . $e->getMessage();
 		include 'error.html.php';
 		exit();
 	}
 	
 	//Submit back to controller index
-	header('Location: ./?listUsers');
+	header('Location: ./?listEquipment');
 	exit();
 }
 
-//Check for list users
-if (isset($_GET['listUsers'])) {
+//Check for list equipment
+if (isset($_GET['listEquipment'])) {
 	include '../includes/db.inc.php';
 	//Try to get users from database
 	try {
-		$result = $pdo->query('SELECT id, firstname, lastname, type, status FROM person ORDER BY lastname ASC');
+		$result = $pdo->query('SELECT id, serialNo, name, status, rentedTo FROM equipment');
 	}
 	catch(PDOException $e) {
-		$error = 'Error fetching users from the database' . $e->getMessage();
+		$error = 'Error fetching equipment from the database' . $e->getMessage();
 		include 'error.html.php';
 		exit();
 	}
 	//Loop through users for output
 	foreach ($result as $row) {
-		$users[] = array('id'=>$row['id'], 'firstname'=>$row['firstname'], 'lastname'=>$row['lastname'], 'status'=>$row['status'], 'type'=>$row['type']);
+		$cameras[] = array('id'=>$row['id'], 'serialNo'=>$row['serialNo'], 'name'=>$row['name'], 'status'=>$row['status'], 'rentedTo'=>$row['rentedTo']);
 	}
 	//include template to display users
-	include 'users.html.php';
+	include 'equipment.html.php';
 	exit();
 }
 
 //Include initial user admin options nav
-include 'userAdminStart.html.php';
+include 'equipmentAdminStart.html.php';

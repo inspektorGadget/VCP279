@@ -5,27 +5,27 @@ include_once '../includes/helpers.inc.php';
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Users</title>
+		<title>Equipment</title>
 	</head>
 
 	<body>
 		<div>
 			<header>
-				<h1>Users</h1>
+				<h1>Equipment</h1>
 			</header>
 		</div>
 		<div>
-			<h3><a href="?addUser">Add new user</a></h3>
+			<h3><a href="?addUser">Add new equipment</a></h3>
 			<table>
-				<?php foreach($users as $user): ?>
+				<?php foreach($cameras as $camera): ?>
 					<tr>
 						<form action="" method="post">
 							<tr>
-								<td><?php htmlout($user['firstname']); ?></td>
-								<td><?php htmlout($user['lastname']); ?></td>
-								<td><?php htmlout($user['type']); ?></td>
-								<td><?php htmlout($user['status']); ?></td>
-								<td><input type="hidden" name="id" value="<?php echo $user['id']; ?>" /></td>
+								<td><?php htmlout($camera['name']); ?></td>
+								<td><?php htmlout($camera['serialNo']); ?></td>
+								<td><?php htmlout($camera['status']); ?></td>
+								<td><?php htmlout($camera['rentedTo']); ?></td>
+								<td><input type="hidden" name="id" value="<?php echo $camera['id']; ?>" /></td>
 								<td><input type="submit" name="action" value="Edit" /></td>
 								<td><input type="submit" name="action" value="Delete" /></td>
 							</tr>
@@ -34,7 +34,7 @@ include_once '../includes/helpers.inc.php';
 				<?php endforeach; ?>
 			</table>
 			<p>
-				<a href="../">Return to User Administration</a>
+				<a href="../">Return to Camera Administration</a>
 			</p>
 		</div>
 	</body>

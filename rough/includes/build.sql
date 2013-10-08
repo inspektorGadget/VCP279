@@ -18,12 +18,20 @@ CREATE TABLE person (
 CREATE TABLE equipment (
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	serialNo VARCHAR(255) NOT NULL,
-	addedDate DATE NOT NULL,
+	addedDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	name VARCHAR(128) NOT NULL,
 	description VARCHAR(512),
-	status ENUM('rented', 'repair', 'inactive', 'available'),
+	status ENUM('rented', 'repair', 'inactive', 'available') DEFAULT 'available',
 	rentedTo VARCHAR(128) DEFAULT 'available'
 ) DEFAULT CHARACTER SET utf8 ENGINE=InnoDB;
+
+# Adding equipment to equipment table
+INSERT INTO equipment SET
+serialNo = '002ws5xj7',
+name = 'camera 1',
+description = 'This is a sweet camera',
+status = 'available';
+
 
 
 # Adding Accounts to person table
