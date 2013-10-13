@@ -1,10 +1,8 @@
 <?php
 session_start();
-include_once $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/navScript.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/navScript.php';
 
 if (isset($_SESSION['user'])) {
-	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
-	include_once $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/navScript.php';
 
 	$pageTitle = 'VCP Rental Admin';
 	
@@ -16,7 +14,6 @@ elseif (isset($_POST['userName'])) {
 	$_SESSION['password'] = $_POST['password'];
 	
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
-	include_once $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/navScript.php';
 
 	$pageTitle = 'VCP Rental Admin';
 	
@@ -24,5 +21,6 @@ elseif (isset($_POST['userName'])) {
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 } 
 else {
+	$pageTitle = "User Login";
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/loginForm.html.php';
 }

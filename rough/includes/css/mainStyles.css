@@ -101,3 +101,14 @@ a:link, a:visited, a:hover {
 	padding: 10px;
 	margin-left: 210px;
 }
+#loginDiv {
+	padding: 10px;
+	background: #FFFFFF;
+	width: 280px;
+	height: 180px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin: -90px 0px 0px -140px;
+}
+

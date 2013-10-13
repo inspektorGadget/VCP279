@@ -12,7 +12,8 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/helpers.inc.php
 	</head>
 
 	<body>
-		<div id="loginDiv">
+		<div id="loginDiv" class="pageCenter">
+			<h1><?php htmlout($pageTitle)?></h1>
 			<form action="" method="post">
 				<table>
 					<tr>

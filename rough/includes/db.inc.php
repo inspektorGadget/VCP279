@@ -5,7 +5,8 @@ try {
 	$pdo->exec('SET NAMES "utf8"');
 }
 catch(PDOException $e) {
-	$error = 'Unable to connect to the database server';
-	include 'error.html.php';
+	session_destroy();
+	$error = 'Unable to connect to the database server. Bad username or password';
+	header('Location: /VCP279/rough/');
 	exit();
 }
