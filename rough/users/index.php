@@ -1,11 +1,14 @@
-<?php 
+<?php
 //Include magic quotes fix
 include_once $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/magicquotes.inc.php';
+//nav script
+include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/navScript.php';
+$pageTitle = 'User Administration';
 
-//Check for add author
+//Check for add user
 if (isset($_GET['addUser'])) {
 	$row = array('type' => 'Student', 'status' => 'active');
-	$pageTitle = 'New User';
+	$panelTitle = 'New User';
 	$action = 'addform';
 	$studentid = '';
 	$firstname = '';
@@ -17,13 +20,16 @@ if (isset($_GET['addUser'])) {
 	$id = '';
 	$button = 'Add User';
 	
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+	include 'localNav.html.php';
 	include 'addUserForm.html.php';
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 	exit();
 }
 
 //Check if addform has been submitted
 if (isset($_GET['addform'])) {
-	include '../includes/db.inc.php';
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
 	
 	try {
 		$sql = 'INSERT INTO person SET
@@ -50,7 +56,13 @@ if (isset($_GET['addform'])) {
 	}
 	catch(PDOException $e) {
 		$error = 'Error adding author' . $e->getMessage();
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+		include 'localNav.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+		include 'localNav.html.php';
 		include 'error.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 		exit();
 	}
 	
@@ -61,7 +73,7 @@ if (isset($_GET['addform'])) {
 
 //Check if edit author has been submitted
 if (isset($_POST['action']) && $_POST['action']=='Edit') {
-	include '../includes/db.inc.php';
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
 	
 	//Get author info from author table
 	try {
@@ -72,7 +84,10 @@ if (isset($_POST['action']) && $_POST['action']=='Edit') {
 	}
 	catch(PDOException $e) {
 		$error = 'Error fetching user details' . $e->getMessage();
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+		include 'localNav.html.php';
 		include 'error.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 		exit();
 	}
 
@@ -80,7 +95,7 @@ if (isset($_POST['action']) && $_POST['action']=='Edit') {
 	$row = $s->fetch();
 	
 	//Set variables for populated author form
-	$pageTitle = 'Edit User';
+	$panelTitle = 'Edit User';
 	$action = 'editform';
 	$studentid = $row['studentid'];
 	$firstname = $row['firstname'];
@@ -92,14 +107,17 @@ if (isset($_POST['action']) && $_POST['action']=='Edit') {
 	$id = $row['id'];
 	$button = 'Update User';
 	
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+	include 'localNav.html.php';
 	include 'addUserForm.html.php';
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 	exit();
 	
 }
 
 //Check if editform has been submitted
 if (isset($_GET['editform'])) {
-	include '../includes/db.inc.php';
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
 	
 	try {
 		$sql = 'UPDATE person SET
@@ -128,7 +146,10 @@ if (isset($_GET['editform'])) {
 	}
 	catch(PDOException $e) {
 		$error = 'Error updating author' . $e->getMessage();
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+		include 'localNav.html.php';
 		include 'error.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 		exit();
 	}
 	
@@ -141,7 +162,10 @@ if (isset($_GET['editform'])) {
 	}
 	catch(PDOException $e) {
 		$error = 'Error updating user details' . $e->getMessage();
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+		include 'localNav.html.php';
 		include 'error.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 		exit();
 	}
 
@@ -149,7 +173,7 @@ if (isset($_GET['editform'])) {
 	$row = $s->fetch();
 	
 	//Set variables for populated author form
-	$pageTitle = 'User Updated Successfully';
+	$panelTitle = 'User Updated Successfully';
 	$action = 'editform';
 	$studentid = $row['studentid'];
 	$firstname = $row['firstname'];
@@ -161,13 +185,16 @@ if (isset($_GET['editform'])) {
 	$id = $row['id'];
 	$button = 'Update User';
 	
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+	include 'localNav.html.php';
 	include 'addUserForm.html.php';
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 	exit();
 }
 
-//Check if delete author
+//Check if delete user
 if (isset($_POST['action']) && $_POST['action'] == 'Delete') {
-	include '../includes/db.inc.php';
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
 	
 	try {
 		$sql = 'DELETE from person WHERE id = :id';
@@ -177,7 +204,10 @@ if (isset($_POST['action']) && $_POST['action'] == 'Delete') {
 	}
 	catch(PDOException $e) {
 		$error = 'Error deleting user from database' . $e->getMessage();
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+		include 'localNav.html.php';
 		include 'error.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 		exit();
 	}
 	
@@ -188,24 +218,33 @@ if (isset($_POST['action']) && $_POST['action'] == 'Delete') {
 
 //Check for list users
 if (isset($_GET['listUsers'])) {
-	include '../includes/db.inc.php';
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
 	//Try to get users from database
 	try {
 		$result = $pdo->query('SELECT id, firstname, lastname, type, status FROM person ORDER BY lastname ASC');
 	}
 	catch(PDOException $e) {
 		$error = 'Error fetching users from the database' . $e->getMessage();
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+		include 'localNav.html.php';
 		include 'error.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 		exit();
 	}
 	//Loop through users for output
 	foreach ($result as $row) {
 		$users[] = array('id'=>$row['id'], 'firstname'=>$row['firstname'], 'lastname'=>$row['lastname'], 'status'=>$row['status'], 'type'=>$row['type']);
 	}
+	
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+	include 'localNav.html.php';
 	//include template to display users
 	include 'users.html.php';
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 	exit();
 }
 
-//Include initial user admin options nav
-include 'userAdminStart.html.php';
+//Build page and Include initial user admin options nav
+include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+include 'localNav.html.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
