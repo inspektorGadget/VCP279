@@ -95,7 +95,7 @@ if (isset($_POST['action']) && $_POST['action']=='Edit') {
 	//store result from person query in $row
 	$row = $s->fetch();
 	
-	//Set variables for populated author form
+	//Set variables for populated user form
 	$panelTitle = 'Edit User';
 	$action = 'editform';
 	$studentid = $row['studentid'];
