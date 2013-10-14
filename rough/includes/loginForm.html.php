@@ -33,9 +33,15 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/helpers.inc.php
 							<input type="submit" value="Login" />
 						</td>
 					</tr>
-				</table>
-				
+				</table>				
 			</form>
+			<div>
+				<p>
+					<?php if (isset ($_SESSION['$error'])) {
+						echo $_SESSION['$error'];
+					}?>
+				</p>
+			</div>
 		</div>
 	</body>
 </html>
