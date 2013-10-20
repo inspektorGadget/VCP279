@@ -18,7 +18,8 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/helpers.inc.php
 		<div id="container">
 			
 			<div id="headerBanner">
-				<h1><?php htmlout($pageTitle); ?></h1>
+				<h1 id="headerBannerTitle"><?php htmlout($pageTitle); ?></h1>
+				<a href="?logout" id="logOutLink">&gt;logout <?php echo $_SESSION['user']; ?></a>
 			</div>	
 			
 			<div id="navTopDiv">

@@ -1,28 +1,25 @@
 <?php
+session_start();
 //Include magic quotes fix
 include_once $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/magicquotes.inc.php';
 //nav script
 include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/navScript.php';
-$pageTitle = 'User Administration';
+$pageTitle = 'Equipment Administration';
 
-//Check for add user
-if (isset($_GET['addUser'])) {
-	$row = array('type' => 'Student', 'status' => 'active');
-	$panelTitle = 'New User';
-	$action = 'addform';
-	$studentid = '';
-	$firstname = '';
-	$lastname = '';
-	$address1 = '';
-	$address2 = '';
-	$zip = '';
-	$email = '';
+//Check for add equipment
+if (isset($_GET['addEquipment'])) {
 	$id = '';
-	$button = 'Add User';
+	$row = array('type' => 'camera', 'status' => 'available');
+	$panelTitle = 'New Equipment';
+	$action = 'addform';
+	$serialNo = '';
+	$name = '';
+	$description = '';
+	$button = 'Add Equipment';
 	
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
 	include 'localNav.html.php';
-	include 'addUserForm.html.php';
+	include 'addEquipmentForm.html.php';
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 	exit();
 }
@@ -32,24 +29,16 @@ if (isset($_GET['addform'])) {
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
 	
 	try {
-		$sql = 'INSERT INTO person SET
-			studentid = :studentid,
-			firstname = :firstname,
-			lastname = :lastname,
-			address1 = :address1,
-			address2 = :address2,
-			zip = :zip,
-			email = :email,
+		$sql = 'INSERT INTO equipment SET
+			serialNo = :serialNo,
+			name = :name,
+			description = :description,			
 			type = :type,
 			status = :status';
 		$s = $pdo->prepare($sql);
-		$s->bindValue(':studentid', $_POST['studentid']);
-		$s->bindValue(':firstname', $_POST['firstname']);
-		$s->bindValue(':lastname', $_POST['lastname']);
-		$s->bindValue(':address1', $_POST['address1']);
-		$s->bindValue(':address2', $_POST['address2']);
-		$s->bindValue(':zip', $_POST['zip']);
-		$s->bindValue(':email', $_POST['email']);
+		$s->bindValue(':serialNo', $_POST['serialNo']);
+		$s->bindValue(':name', $_POST['name']);
+		$s->bindValue(':description', $_POST['description']);
 		$s->bindValue(':type', $_POST['type']);
 		$s->bindValue(':status', $_POST['status']);
 		$s->execute();
@@ -58,32 +47,29 @@ if (isset($_GET['addform'])) {
 		$error = 'Error adding author' . $e->getMessage();
 		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
 		include 'localNav.html.php';
-		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
-		include 'localNav.html.php';
 		include 'error.html.php';
-		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 		exit();
 	}
 	
 	//Submit back to controller index
-	header('Location: ./?listUsers');
+	header('Location: ./?listEquipment');
 	exit();
 }
 
-//Check if edit author has been submitted
+//Check if edit equipment has been submitted
 if (isset($_POST['action']) && $_POST['action']=='Edit') {
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
 	
-	//Get author info from author table
+	//Get equipment info from equipment table
 	try {
-		$sql = 'SELECT id, studentid, firstname, lastname, address1, address2, zip, email, type, status FROM person WHERE id = :id';
+		$sql = 'SELECT id, serialNo, name, LEFT(addedDate, 10), type, description, status, rentedTo FROM equipment WHERE id = :id';
 		$s = $pdo->prepare($sql);
 		$s->bindValue(':id', $_POST['id']);
 		$s->execute();
 	}
 	catch(PDOException $e) {
-		$error = 'Error fetching user details' . $e->getMessage();
+		$error = 'Error fetching equipment details' . $e->getMessage();
 		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
 		include 'localNav.html.php';
 		include 'error.html.php';
@@ -91,25 +77,24 @@ if (isset($_POST['action']) && $_POST['action']=='Edit') {
 		exit();
 	}
 
-	//store result from person query in $row
+	//store result from equipment query in $row
 	$row = $s->fetch();
 	
-	//Set variables for populated author form
-	$panelTitle = 'Edit User';
+	//Set variables for populated equipment form
+	$panelTitle = 'Edit Equipment';
 	$action = 'editform';
-	$studentid = $row['studentid'];
-	$firstname = $row['firstname'];
-	$lastname = $row['lastname'];
-	$address1 = $row['address1'];
-	$address2 = $row['address2'];
-	$zip = $row['zip'];
-	$email = $row['email'];
+	$serialNo = $row['serialNo'];
+	$name = $row['name'];
+	$addedDate = $row['LEFT(addedDate, 10)'];
+	$description = $row['description'];
+	
+	$rentedTo = $row['rentedTo'];
 	$id = $row['id'];
-	$button = 'Update User';
+	$button = 'Update Equipment';
 	
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
 	include 'localNav.html.php';
-	include 'addUserForm.html.php';
+	include 'addEquipmentForm.html.php';
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 	exit();
 	
@@ -120,32 +105,24 @@ if (isset($_GET['editform'])) {
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
 	
 	try {
-		$sql = 'UPDATE person SET
-			studentid = :studentid,
-			firstname = :firstname,
-			lastname = :lastname,
-			address1 = :address1,
-			address2 = :address2,
-			zip = :zip,
-			email = :email,
+		$sql = 'UPDATE equipment SET
+			serialNo = :serialNo,
+			name = :name,
+			description = :description,
 			type = :type,
 			status = :status
 			WHERE id = :id';
 		$s = $pdo->prepare($sql);
 		$s->bindValue(':id', $_POST['id']);
-		$s->bindValue(':studentid', $_POST['studentid']);
-		$s->bindValue(':firstname', $_POST['firstname']);
-		$s->bindValue(':lastname', $_POST['lastname']);
-		$s->bindValue(':address1', $_POST['address1']);
-		$s->bindValue(':address2', $_POST['address2']);
-		$s->bindValue(':zip', $_POST['zip']);
-		$s->bindValue(':email', $_POST['email']);
+		$s->bindValue(':serialNo', $_POST['serialNo']);
+		$s->bindValue(':name', $_POST['name']);
+		$s->bindValue(':description', $_POST['description']);		
 		$s->bindValue(':type', $_POST['type']);
 		$s->bindValue(':status', $_POST['status']);
 		$s->execute();
 	}
 	catch(PDOException $e) {
-		$error = 'Error updating author' . $e->getMessage();
+		$error = 'Error updating equipment' . $e->getMessage();
 		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
 		include 'localNav.html.php';
 		include 'error.html.php';
@@ -155,7 +132,7 @@ if (isset($_GET['editform'])) {
 	
 	//After successful update, display success message and updated info
 	try {
-		$sql = 'SELECT id, studentid, firstname, lastname, address1, address2, zip, email, type, status FROM person WHERE id = :id';
+		$sql = 'SELECT id, serialNo, name, LEFT(addedDate, 10), type, description, status, rentedTo FROM equipment WHERE id = :id';
 		$s = $pdo->prepare($sql);
 		$s->bindValue(':id', $_POST['id']);
 		$s->execute();
@@ -169,27 +146,26 @@ if (isset($_GET['editform'])) {
 		exit();
 	}
 
-	//store result from person query in $row
+	//store result from equipment query in $row
 	$row = $s->fetch();
 	
-	//Set variables for populated author form
-	$panelTitle = 'User Updated Successfully';
+	//Set variables for populated equipment form
+	$panelTitle = 'Equipment Updated Successfully';
 	$action = 'editform';
-	$studentid = $row['studentid'];
-	$firstname = $row['firstname'];
-	$lastname = $row['lastname'];
-	$address1 = $row['address1'];
-	$address2 = $row['address2'];
-	$zip = $row['zip'];
-	$email = $row['email'];
+	$serialNo = $row['serialNo'];
+	$name = $row['name'];
+	$addedDate = $row['LEFT(addedDate, 10)'];
+	$description = $row['description'];
+	$rentedTo = $row['rentedTo'];
 	$id = $row['id'];
-	$button = 'Update User';
+	$button = 'Update Equipment';
 	
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
 	include 'localNav.html.php';
-	include 'addUserForm.html.php';
+	include 'addEquipmentForm.html.php';
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 	exit();
+	
 }
 
 //Check if delete user
@@ -197,7 +173,7 @@ if (isset($_POST['action']) && $_POST['action'] == 'Delete') {
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
 	
 	try {
-		$sql = 'DELETE from person WHERE id = :id';
+		$sql = 'DELETE from equipment WHERE id = :id';
 		$s = $pdo->prepare($sql);
 		$s->bindValue(':id', $_POST['id']);
 		$s->execute();
@@ -212,39 +188,40 @@ if (isset($_POST['action']) && $_POST['action'] == 'Delete') {
 	}
 	
 	//Submit back to controller index
-	header('Location: ./?listUsers');
+	header('Location: ./?listEquipment');
 	exit();
 }
 
-//Check for list users
-if (isset($_GET['listUsers'])) {
+//Check for list equipment
+if (isset($_GET['listEquipment'])) {
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
-	//Try to get users from database
+	//Try to get equipment from database
 	try {
-		$result = $pdo->query('SELECT id, firstname, lastname, type, status FROM person ORDER BY lastname ASC');
+		$result = $pdo->query('SELECT id, serialNo, name, type, status, rentedTo FROM equipment ORDER BY type ASC');
 	}
 	catch(PDOException $e) {
-		$error = 'Error fetching users from the database' . $e->getMessage();
+		$error = 'Error fetching equipment from the database' . $e->getMessage();
 		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
 		include 'localNav.html.php';
 		include 'error.html.php';
 		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 		exit();
 	}
-	//Loop through users for output
+	//Loop through equipment for output
 	foreach ($result as $row) {
-		$users[] = array('id'=>$row['id'], 'firstname'=>$row['firstname'], 'lastname'=>$row['lastname'], 'status'=>$row['status'], 'type'=>$row['type']);
+		$items[] = array('id'=>$row['id'], 'serialNo'=>$row['serialNo'], 'name'=>$row['name'], 'type'=>$row['type'],
+										 'status'=>$row['status'], 'rentedTo'=>$row['rentedTo']);
 	}
 	
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
 	include 'localNav.html.php';
-	//include template to display users
-	include 'users.html.php';
+	//include template to display equipment
+	include 'equipment.html.php';
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 	exit();
 }
 
-//Build page and Include initial user admin options nav
+//Build page and Include initial euqipment admin options nav
 include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
 include 'localNav.html.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';

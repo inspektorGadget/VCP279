@@ -10,3 +10,7 @@ elseif (isset($_GET['equipment'])) {
 elseif (isset($_GET['rentals'])) {
 	header('Location: /VCP279/rough/rentals/');
 }
+elseif (isset($_GET['logout'])) {
+	session_destroy();
+	header('Location: /VCP279/rough/');
+}

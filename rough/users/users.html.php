@@ -1,6 +1,13 @@
 
 <div class="content">
 	<table class="stripeInside">
+		<tr>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Type</th>
+			<th>Status</th>			
+			<th colspan="3">&nbsp;</th>			
+		</tr>
 		<?php foreach($users as $user): ?>
 			<tr>
 				<form action="" method="post">

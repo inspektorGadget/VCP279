@@ -59,11 +59,8 @@ if (isset($_GET['addform'])) {
 		$error = 'Error adding author' . $e->getMessage();
 		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
 		include 'localNav.html.php';
-		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
-		include 'localNav.html.php';
 		include 'error.html.php';
-		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
-		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';		
 		exit();
 	}
 	

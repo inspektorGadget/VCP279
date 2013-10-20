@@ -1,11 +1,11 @@
 
 	<div class="sideNav">
-		<ul id="userAdminNav">
+		<ul id="equipmentAdminNav">
 			<li>
-				<a href="?listUsers"><h3>List Users</h3></a>
+				<a href="?listEquipment"><h3>List Equipment</h3></a>
 			</li>
 			<li>
-				<a href="?addUser"><h3>Add User</h3></a>
+				<a href="?addEquipment"><h3>Add Equipment</h3></a>
 			</li>
 		</ul>
 	</div>
