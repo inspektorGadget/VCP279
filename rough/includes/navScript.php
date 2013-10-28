@@ -1,5 +1,4 @@
 <?php
-	
 //check to see where we are and where we are going
 if (isset($_GET['users'])) {	
 	header('Location: /VCP279/rough/users/');

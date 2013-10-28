@@ -37,8 +37,8 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/helpers.inc.php
 			</form>
 			<div>
 				<p>
-					<?php if (isset ($_SESSION['$error'])) {
-						echo $_SESSION['$error'];
+					<?php if (isset ($_SESSION['error'])) {
+						echo $_SESSION['error'];
 					}?>
 				</p>
 			</div>
