@@ -25,7 +25,7 @@
 			<td>
 				<?php
 				if (!isset($addedDate)) {
-					echo Date("1 F d, Y");
+					echo Date("F d, Y");
 				} 
 				else {
 					htmlout($addedDate);
