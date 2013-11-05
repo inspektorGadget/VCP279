@@ -33,6 +33,13 @@ elseif (isset($_POST['userName'])) {
 	//store result from successful person query in $row
 	$row = $s->fetch();
 	
+	//check for results if not bad user/pw
+	if (empty($row)) {
+  	$_SESSION['error'] = 'Unable to connect to the database server. Bad username or password.';
+  	header('Location: /VCP279/rough/');
+		exit();
+	}
+	
 	//check to see if admin user. if so, load rental database frontend
 	if ($row['type'] == 'Admin' && $row['status'] == 'active') {
 		//connect
