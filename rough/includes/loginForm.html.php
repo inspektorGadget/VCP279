@@ -18,8 +18,8 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/helpers.inc.php
 				<table>
 					<tr>
 						<td>
-							<label for="userName">User Name:</label>
-							<input type="text" name="userName" id="userName" />
+							<label for="email">Email Address:</label>
+							<input type="text" name="email" id="email" />
 						</td>
 					</tr>
 					<tr>
@@ -31,6 +31,11 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/helpers.inc.php
 					<tr>
 						<td>
 							<input type="submit" value="Login" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<a href="?registerUser">Register!</a>
 						</td>
 					</tr>
 				</table>				

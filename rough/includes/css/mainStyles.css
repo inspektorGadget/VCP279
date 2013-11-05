@@ -120,6 +120,7 @@ th {
 	background: #FFFFFF;
 	width: 280px;
 	position: absolute;
+	overflow: hidden;
 	left: 50%;
 	top: 50%;
 	margin: -90px 0px 0px -140px;
