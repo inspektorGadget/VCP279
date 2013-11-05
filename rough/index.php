@@ -33,32 +33,32 @@ elseif (isset($_POST['userName'])) {
 	//store result from successful person query in $row
 	$row = $s->fetch();
 	
-	//check for results if not bad user/pw
+	//check for results if so, bad user/pw
 	if (empty($row)) {
   	$_SESSION['error'] = 'Unable to connect to the database server. Bad username or password.';
   	header('Location: /VCP279/rough/');
 		exit();
 	}
 	
-	//check to see if admin user. if so, load rental database frontend
+	//check to see if active admin user. if so, load rental database frontend
 	if ($row['type'] == 'Admin' && $row['status'] == 'active') {
 		//connect
 		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
 		//set session data on successful authorization
 		$_SESSION['user'] = $row['firstname'];
-		$_SESSION['logged'] = 'logged';
+		$_SESSION['logged'] = 'edit';
 		//build page
 		$pageTitle = 'VCP Rental Admin';
 		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
 		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 	}
-	//check to see if frontend user. if so, load rental database frontend
+	//check to see if active frontend user. if so, load rental database frontend
 	elseif ($row['type'] == 'Frontend' && $row['status'] == 'active') {
 		//connect
 		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
 		//set session data on successful authorization
 		$_SESSION['user'] = $row['firstname'];
-		$_SESSION['logged'] = 'logged';
+		$_SESSION['logged'] = 'edit';
 		//build page
 		$pageTitle = 'VCP Rental Admin';
 		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
