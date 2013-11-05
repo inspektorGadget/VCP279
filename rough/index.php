@@ -45,6 +45,18 @@ elseif (isset($_POST['userName'])) {
 		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
 		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 	}
+	//check to see if frontend user. if so, load rental database frontend
+	elseif ($row['type'] == 'Frontend' && $row['status'] == 'active') {
+		//connect
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
+		//set session data on successful authorization
+		$_SESSION['user'] = $row['firstname'];
+		$_SESSION['logged'] = 'logged';
+		//build page
+		$pageTitle = 'VCP Rental Admin';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+	}
 	else {
 		$_SESSION['error'] = "You must be an administrator to enter the rental application";
 		header('Location: /VCP279/rough/');
