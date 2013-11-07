@@ -71,6 +71,9 @@ th {
 .tableStripe {
 	background: #e8e8e8;
 }
+.light {
+	color: #909090;
+}
 #container {
 	width: 960px;
 	margin: 0px auto;

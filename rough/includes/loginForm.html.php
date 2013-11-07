@@ -35,7 +35,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/helpers.inc.php
 					</tr>
 					<tr>
 						<td>
-							<a href="?registerUser">Register!</a>
+							<a href="?profile">Register!</a>
 						</td>
 					</tr>
 				</table>				

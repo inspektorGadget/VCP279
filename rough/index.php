@@ -16,7 +16,7 @@ elseif (isset($_POST['email'])) {
 	//connect to database
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
 	
-	//get user data from databas
+	//get user data from database
 	try {
 		$sql = 'SELECT id, firstname, lastname, email, type, status, password FROM person WHERE email = :email && password = :password';
 		$s = $pdo->prepare($sql);
@@ -57,7 +57,7 @@ elseif (isset($_POST['email'])) {
 			$_SESSION['logged'] = 'nonAdmin';
 			$_SESSION['user'] = $row['firstname'];
 			$_SESSION['email'] = $row['email'];
-			$_SESSION['error'] = 'You must be an administrator to enter the rental application';
+			$_SESSION['message'] = 'If you would like to update your profile, please do so below.';
 			header('Location: /VCP279/rough/register/');
 		}
 	}
@@ -66,7 +66,7 @@ elseif (isset($_POST['email'])) {
 			$_SESSION['logged'] = 'nonAdmin';
 			$_SESSION['user'] = $row['firstname'];
 			$_SESSION['email'] = $row['email'];
-			$_SESSION['error'] = 'You must be an administrator to enter the rental application';
+			$_SESSION['message'] = 'If you would like to update your profile, please do so below.';
 			header('Location: /VCP279/rough/register/');
 	}
 }//end check on $_POST['email] 

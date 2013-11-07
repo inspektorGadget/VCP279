@@ -1,5 +1,10 @@
 <div class="content">
 <h1><?php htmlout($panelTitle); ?></h1>
+<?php 
+	if (isset($_SESSION['message'])) {
+		echo "<p class=\"light\">" . $_SESSION['message'] . "</p>";
+	}
+?>
 <form action="?<?php htmlout($action); ?>" method="post">
 	<table>
 		<tr>

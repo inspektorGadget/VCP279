@@ -7,6 +7,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/navScript.php';
 $pageTitle = 'User Registration';
 
 if (isset($_SESSION['logged'])) {
+	//if user is logged in, set email from session
 	$email = $_SESSION['email'];
 	
 	//connect to database
@@ -14,7 +15,7 @@ if (isset($_SESSION['logged'])) {
 	
 	//Get user info from person table
 	try {
-		$sql = 'SELECT id, studentid, firstname, lastname, address1, address2, zip, email, type, status FROM person WHERE email = :email';
+		$sql = 'SELECT id, studentid, firstname, lastname, address1, address2, zip, email, type, status, password FROM person WHERE email = :email';
 		$s = $pdo->prepare($sql);
 		$s->bindValue(':email', $email);
 		$s->execute();
@@ -43,13 +44,35 @@ if (isset($_SESSION['logged'])) {
 	$email = $row['email'];
 	$type = $row['type'];
 	$status = $row['status'];
+	$password = $row['password'];
 	$id = $row['id'];
-	$button = 'Update User';
+	$button = 'Update Profile';
 	
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
 	include 'localNav.html.php';
 	include 'register_user.html.php';
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 	exit();
+}
+else {
+	//Set variables for new user form
+	$panelTitle = 'Create Profile';
+	$action = 'editform';
+	$studentid = '';
+	$firstname = '';
+	$lastname = '';
+	$address1 = '';
+	$address2 = '';
+	$zip = '';
+	$email = '';
+	$type = 'Student';
+	$status = 'active';
+	$id = '';
+	$button = 'Create Profile';
 	
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+	include 'localNav.html.php';
+	include 'register_user.html.php';
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+	exit();
 }
