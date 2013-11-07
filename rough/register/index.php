@@ -54,25 +54,114 @@ if (isset($_SESSION['logged'])) {
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
 	exit();
 }
-else {
-	//Set variables for new user form
-	$panelTitle = 'Create Profile';
-	$action = 'editform';
-	$studentid = '';
-	$firstname = '';
-	$lastname = '';
-	$address1 = '';
-	$address2 = '';
-	$zip = '';
-	$email = '';
-	$type = 'Student';
-	$status = 'active';
-	$id = '';
-	$button = 'Create Profile';
+
+//Check if addform has been submitted
+if (isset($_GET['addform'])) {
+
+	//check password validity
+	$password = $_POST['password'];
+	$confirmPassword = $_POST['confirmPassword'];
+
+	if ($password == $confirmPassword) {
+
+		$pw_exp = '/^(?=.*\d).{4,8}$/';
+
+		if(!preg_match($pw_exp,$password)) {
+	    $pw_error_message = 'Password must be between 4 and 8 digits long and include at least one numeric digit.<br />';
+	    $panelTitle = 'Create Profile';
+			$action = 'addform';
+			$studentid = '';
+			$firstname = '';
+			$lastname = '';
+			$address1 = '';
+			$address2 = '';
+			$zip = '';
+			$email = '';
+			$type = 'Student';
+			$status = 'active';
+			$id = '';
+			$button = 'Create Profile';
+	    include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+			include 'localNav.html.php';
+			include 'register_user.html.php';
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+			exit();
+  	}
+	}
+	else {
+		$pw_error_message = 'Whoops! Looks like your passwords don\'t match';
+		$panelTitle = 'Create Profile';
+		$action = 'addform';
+		$studentid = '';
+		$firstname = '';
+		$lastname = '';
+		$address1 = '';
+		$address2 = '';
+		$zip = '';
+		$email = '';
+		$type = 'Student';
+		$status = 'active';
+		$id = '';
+		$button = 'Create Profile';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+		include 'localNav.html.php';
+		include 'register_user.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+		exit();
+	}//end password validation check
+
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
 	
-	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
-	include 'localNav.html.php';
-	include 'register_user.html.php';
-	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+	try {
+		$sql = 'INSERT INTO person SET
+			studentid = :studentid,
+			firstname = :firstname,
+			lastname = :lastname,
+			address1 = :address1,
+			address2 = :address2,
+			zip = :zip,
+			email = :email,
+			password = :password';
+		$s = $pdo->prepare($sql);
+		$s->bindValue(':studentid', $_POST['studentid']);
+		$s->bindValue(':firstname', $_POST['firstname']);
+		$s->bindValue(':lastname', $_POST['lastname']);
+		$s->bindValue(':address1', $_POST['address1']);
+		$s->bindValue(':address2', $_POST['address2']);
+		$s->bindValue(':zip', $_POST['zip']);
+		$s->bindValue(':email', $_POST['email']);
+		$s->bindValue(':password', $_POST['password']);
+		$s->execute();
+	}
+	catch(PDOException $e) {
+		$error = 'Error adding user' . $e->getMessage();
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+		include 'localNav.html.php';
+		include 'error.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';		
+		exit();
+	}
+	
+	//Submit back to login index
+	$_SESSION['message'] = 'Your profile has been created. If you would like to edit your profile, please log in.';
+	header('Location: /VCP279/rough/');
 	exit();
 }
+$panelTitle = 'Create Profile';
+$action = 'addform';
+$studentid = '';
+$firstname = '';
+$lastname = '';
+$address1 = '';
+$address2 = '';
+$zip = '';
+$email = '';
+$type = 'Student';
+$status = 'active';
+$id = '';
+$button = 'Create Profile';
+
+include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+include 'localNav.html.php';
+include 'register_user.html.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';

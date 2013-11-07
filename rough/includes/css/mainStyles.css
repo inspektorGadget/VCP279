@@ -74,6 +74,9 @@ th {
 .light {
 	color: #909090;
 }
+.errorColor {
+	color: #FF0000; 
+}
 #container {
 	width: 960px;
 	margin: 0px auto;

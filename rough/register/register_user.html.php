@@ -4,6 +4,9 @@
 	if (isset($_SESSION['message'])) {
 		echo "<p class=\"light\">" . $_SESSION['message'] . "</p>";
 	}
+	elseif (isset($pw_error_message)) {
+		echo "<p class=\"errorColor\">" . $pw_error_message . "</p>";
+	}
 ?>
 <form action="?<?php htmlout($action); ?>" method="post">
 	<table>
@@ -63,6 +66,26 @@
 				<input type="text" name="email" id="email" value="<?php htmlout($email); ?>" />
 			</td>
 		</tr>
+		<?php if ($action == 'addform') {
+			echo '
+				<tr>
+					<td>
+						<label for="password">Password:</label>
+					</td>
+					<td>
+						<input type="password" name="password" id="password" />
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="confirmPassword">Confirm Password:</label>
+					</td>
+					<td>
+						<input type="password" name="confirmPassword" id="confirmPassword" />
+					</td>
+				</tr>
+			';
+		}?>
 		<tr>
 			<td>
 				<label for="type">Type:</label>
