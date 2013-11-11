@@ -19,7 +19,11 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/helpers.inc.php
 			
 			<div id="headerBanner">
 				<h1 id="headerBannerTitle"><?php htmlout($pageTitle); ?></h1>
-				<a href="?logout" id="logOutLink">&gt; logout <?php echo $_SESSION['user']; ?></a>
+				<?php
+				if (isset($_SESSION['user'])) {
+					echo "<a href=\"?logout\" id=\"logOutLink\">&gt; logout".$_SESSION['user']."</a>";
+				}
+				?>
 			</div>	
 			
 			<div id="navTopDiv">
@@ -27,6 +31,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/helpers.inc.php
 					<li><a href="?users"><h3>&gt;Manage Users</h3></a></li>
 					<li><a href="?equipment"><h3>&gt;Manage Equipment</h3></a></li>
 					<li><a href="?rentals"><h3>&gt;Manage Rentals</h3></a></li>
+					<li><a href="?profile"><h3>&gt;Manage Profile</h3></a></li>
 				</ul>
 			</div>
 	

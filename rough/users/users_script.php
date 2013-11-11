@@ -72,7 +72,7 @@ if (isset($_GET['addform'])) {
 if (isset($_POST['action']) && $_POST['action']=='Edit') {
 	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
 	
-	//Get author info from author table
+	//Get user info from person table
 	try {
 		$sql = 'SELECT id, studentid, firstname, lastname, address1, address2, zip, email, type, status FROM person WHERE id = :id';
 		$s = $pdo->prepare($sql);

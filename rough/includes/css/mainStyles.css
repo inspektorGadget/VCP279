@@ -71,6 +71,12 @@ th {
 .tableStripe {
 	background: #e8e8e8;
 }
+.light {
+	color: #909090;
+}
+.errorColor {
+	color: #FF0000; 
+}
 #container {
 	width: 960px;
 	margin: 0px auto;
@@ -119,8 +125,8 @@ th {
 	padding: 10px;
 	background: #FFFFFF;
 	width: 280px;
-	height: 180px;
 	position: absolute;
+	overflow: hidden;
 	left: 50%;
 	top: 50%;
 	margin: -90px 0px 0px -140px;
