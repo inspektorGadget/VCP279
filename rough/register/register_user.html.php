@@ -4,8 +4,8 @@
 	if (isset($_SESSION['message'])) {
 		echo "<p class=\"light\">" . $_SESSION['message'] . "</p>";
 	}
-	elseif (isset($pw_error_message)) {
-		echo "<p class=\"errorColor\">" . $pw_error_message . "</p>";
+	elseif (isset($errorMessage)) {
+		echo "<p class=\"errorColor\">" . $errorMessage . "</p>";
 	}
 ?>
 <form action="?<?php htmlout($action); ?>" method="post">
