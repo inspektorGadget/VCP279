@@ -189,7 +189,9 @@ if (isset($_GET['addform'])) {
 	$_SESSION['message'] = 'Your profile has been created. If you would like to edit your profile, please log in.';
 	header('Location: /VCP279/rough/');
 	exit();
-}
+}//end user registration logic
+
+//default values when coming from Register Link
 $panelTitle = 'Create Profile';
 $action = 'addform';
 $studentid = '';
