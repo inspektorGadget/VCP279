@@ -142,7 +142,7 @@ if (isset($_GET['editform'])) {
 		$s->execute();
 	}
 	catch(PDOException $e) {
-		$error = 'Error updating author' . $e->getMessage();
+		$error = 'Error updating user' . $e->getMessage();
 		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
 		include 'localNav.html.php';
 		include 'error.html.php';
@@ -169,7 +169,7 @@ if (isset($_GET['editform'])) {
 	//store result from person query in $row
 	$row = $s->fetch();
 	
-	//Set variables for populated author form
+	//Set variables for populated user form
 	$panelTitle = 'User Updated Successfully';
 	$action = 'editform';
 	$studentid = $row['studentid'];

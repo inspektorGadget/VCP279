@@ -66,7 +66,6 @@ elseif (isset($_POST['email'])) {
 			$_SESSION['logged'] = 'nonAdmin';
 			$_SESSION['user'] = $row['firstname'];
 			$_SESSION['email'] = $row['email'];
-			$_SESSION['message'] = 'If you would like to update your profile, please do so below.';
 			header('Location: /VCP279/rough/register/');
 	}
 }//end check on $_POST['email] 

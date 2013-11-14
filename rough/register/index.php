@@ -6,7 +6,8 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/magicquotes.inc
 include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/navScript.php';
 $pageTitle = 'User Registration';
 
-if (isset($_SESSION['logged'])) {
+//if user is logged in display user's info also account for logged in user moving back to edit profile
+if (isset($_SESSION['logged']) && !isset($_GET['editform']) || isset($_SESSION['logged']) && isset($_GET['editProfile'])) {
 	//if user is logged in, set email from session
 	$email = $_SESSION['email'];
 	
@@ -155,6 +156,7 @@ if (isset($_GET['addform'])) {
 		exit();
 	}//end existing check
 	
+	//make database insertion
 	try {
 		$sql = 'INSERT INTO person SET
 			studentid = :studentid,
@@ -190,6 +192,174 @@ if (isset($_GET['addform'])) {
 	header('Location: /VCP279/rough/');
 	exit();
 }//end user registration logic
+
+//check if edit profile
+if (isset($_GET['editform'])) {
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
+
+	//Perform sanity check on email address
+	//Get current user's email address
+	try {
+		$sql = 'SELECT id, email FROM person WHERE id = :id';
+		$s = $pdo->prepare($sql);
+		$s->bindValue(':id', $_POST['id']);
+		$s->execute();
+	}
+	catch(PDOException $e) {
+		$error = 'Error updating user details' . $e->getMessage();
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+		include 'localNav.html.php';
+		include 'error.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+		exit();
+	}
+
+	//Store Current user's email address
+	$row = $s->fetch();
+	$currentEmail = $row['email'];
+	//Check and store email address being submitted
+	$subEmail = $_POST['email'];
+
+	//check new email against old email
+	if ($currentEmail != $subEmail) {
+
+		//if emails don't match see if someone else is already using it
+		try {
+			$sql = 'SELECT * FROM person WHERE email = :email AND id != :id';
+			$s = $pdo->prepare($sql);
+			$s->bindValue(':email', $subEmail);
+			$s->bindValue(':id', $row['id']);
+			$s->execute();
+		}
+		catch(PDOException $e) {
+		$error = 'Error updating user details' . $e->getMessage();
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+		include 'localNav.html.php';
+		include 'error.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+		exit();
+		}
+		//store results
+		$rowB = $s->fetch();
+
+		//if it's not empty, someone is already registered
+		if (!empty($rowB)) {
+
+			try {
+				$sql = 'SELECT id, studentid, firstname, lastname, address1, address2, zip, email, type, status, password FROM person WHERE id = :id';
+				$s = $pdo->prepare($sql);
+				$s->bindValue(':id', $_POST['id']);
+				$s->execute();
+			}
+			catch(PDOException $e) {
+				$error = 'Error fetching user details' . $e->getMessage();
+				include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+				include 'localNav.html.php';
+				include 'error.html.php';
+				include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+				exit();
+			}
+
+			//store result from person query in $row
+			$row = $s->fetch();
+			
+			//Set variables for populated user form
+			$panelTitle = 'Edit Profile';
+			$errorMessage = 'Whoops! look\'s like that email is already in use!';
+			$action = 'editform';
+			$studentid = $row['studentid'];
+			$firstname = $row['firstname'];
+			$lastname = $row['lastname'];
+			$address1 = $row['address1'];
+			$address2 = $row['address2'];
+			$zip = $row['zip'];
+			$email = $row['email'];
+			$type = $row['type'];
+			$status = $row['status'];
+			$password = $row['password'];
+			$id = $row['id'];
+			$button = 'Update Profile';
+			
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+			include 'localNav.html.php';
+			include 'register_user.html.php';
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+			exit();
+		}
+	}
+
+	//make database changes
+	try {
+		$sql = 'UPDATE person SET
+			studentid = :studentid,
+			firstname = :firstname,
+			lastname = :lastname,
+			address1 = :address1,
+			address2 = :address2,
+			zip = :zip,
+			email = :email
+			WHERE id = :id';
+		$s = $pdo->prepare($sql);
+		$s->bindValue(':studentid', $_POST['studentid']);
+		$s->bindValue(':firstname', $_POST['firstname']);
+		$s->bindValue(':lastname', $_POST['lastname']);
+		$s->bindValue(':address1', $_POST['address1']);
+		$s->bindValue(':address2', $_POST['address2']);
+		$s->bindValue(':zip', $_POST['zip']);
+		$s->bindValue(':email', $_POST['email']);
+		$s->bindValue(':id', $_POST['id']);
+		$s->execute();
+	}
+	catch(PDOException $e) {
+		$error = 'Error adding user' . $e->getMessage();
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+		include 'localNav.html.php';
+		include 'error.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';		
+		exit();
+	}
+
+	//After successful update, display success message and updated info
+	try {
+		$sql = 'SELECT id, studentid, firstname, lastname, address1, address2, zip, email, type, status FROM person WHERE id = :id';
+		$s = $pdo->prepare($sql);
+		$s->bindValue(':id', $_POST['id']);
+		$s->execute();
+	}
+	catch(PDOException $e) {
+		$error = 'Error updating user details' . $e->getMessage();
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+		include 'localNav.html.php';
+		include 'error.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+		exit();
+	}
+
+	//store result from person query in $row
+	$row = $s->fetch();
+
+	//Set variables for populated registration form
+	$panelTitle = 'Edit Profile';
+	$errorMessage = 'Profile Updated Successfully';
+	$action = 'editform';
+	$studentid = $row['studentid'];
+	$firstname = $row['firstname'];
+	$lastname = $row['lastname'];
+	$address1 = $row['address1'];
+	$address2 = $row['address2'];
+	$zip = $row['zip'];
+	$email = $row['email'];
+	$type = $row['type'];
+	$status = $row['status'];
+	$id = $row['id'];
+	$button = 'Update User';
+	
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+	include 'localNav.html.php';
+	include 'register_user.html.php';
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+	exit();
+}
 
 //default values when coming from Register Link
 $panelTitle = 'Create Profile';

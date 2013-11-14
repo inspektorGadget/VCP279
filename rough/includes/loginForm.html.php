@@ -41,7 +41,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/helpers.inc.php
 				</table>				
 			</form>
 			<div>
-				<p>
+				<p class="errorColor">
 					<?php 
 					if (isset ($_SESSION['error'])) {
 						echo $_SESSION['error'];
