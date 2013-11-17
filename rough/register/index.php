@@ -6,6 +6,210 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/magicquotes.inc
 include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/navScript.php';
 $pageTitle = 'User Registration';
 
+
+//Check for change password
+if (isset($_GET['changePassword'])) {
+
+	//first check to see if user is logged in
+	if (!isset($_SESSION['logged'])) {
+		$errorMessage = 'Whoops! You need to log in to change your password. 
+						<a href="/">Log In</a>';
+
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+		include 'localNav.html.php';
+		include 'change_pw.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+		exit();
+	}
+
+	//if logged in, get user info
+	$email = $_SESSION['email']; 
+
+	//connect to database
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
+
+	try {
+		$sql = 'SELECT id FROM person WHERE email = :email';
+		$s = $pdo->prepare($sql);
+		$s->bindValue(':email', $email);
+		$s->execute();
+	}
+	catch(PDOException $e) {
+		$error = 'Error fetching user details' . $e->getMessage();
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+		include 'localNav.html.php';
+		include 'error.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+		exit();
+	}
+
+	//store result from person query in $row
+	$row = $s->fetch();
+	//prepare results/variables for password form
+	$id = $row['id'];
+	$panelTitle = 'Change Password';
+	$action = 'updatePassword';
+	$button = 'change password';
+
+
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+	include 'localNav.html.php';
+	include 'change_pw.html.php';
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+	exit();
+}
+
+//Password Reset
+if (isset($_GET['updatePassword'])) {
+	
+	//first check to see if user is logged in
+	if (!isset($_SESSION['logged'])) {
+		$errorMessage = 'Whoops! You need to log in to change your password. 
+						<a href="/">Log In</a>';
+
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+		include 'localNav.html.php';
+		include 'change_pw.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+		exit();
+	}
+
+	//connect to database
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
+
+	try {
+		$sql = 'SELECT password FROM person WHERE id = :id';
+		$s = $pdo->prepare($sql);
+		$s->bindValue(':id', $_POST['id']);
+		$s->execute();
+	}
+	catch(PDOException $e) {
+		$error = 'Error fetching user details' . $e->getMessage();
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+		include 'localNav.html.php';
+		include 'error.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+		exit();
+	}
+
+	//store result from person query in $row
+	$row = $s->fetch();
+	//prep variables for password change
+	$currentPassword = $row['password'];
+	$currentPasswordCheck = md5($_POST['currentPasswordCheck']);
+	$newPassword = $_POST['newPassword'];
+	$newPasswordVerify = $_POST['newPasswordVerify'];
+
+	//password verification
+	if ($currentPassword == $currentPasswordCheck) {
+		
+		$pw_exp = '/^(?=.*\d).{4,32}$/';
+
+		if(!preg_match($pw_exp,$newPassword)) {
+			$errorMessage = 'Password must be between 4 and 32 digits long and include at least one numeric digit.<br />';
+		    $id = $_POST['id'];
+			$panelTitle = 'Change Password';
+			$action = 'updatePassword';
+			$button = 'change password';
+
+
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+			include 'localNav.html.php';
+			include 'change_pw.html.php';
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+			exit();
+  		}
+  		elseif ($newPassword != $newPasswordVerify) {
+  			$errorMessage = 'Whoops! Looks like the new passwords you entered don\'t match.<br />';
+		    $id = $_POST['id'];
+			$panelTitle = 'Change Password';
+			$action = 'updatePassword';
+			$button = 'change password';
+
+
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+			include 'localNav.html.php';
+			include 'change_pw.html.php';
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+			exit();
+  		}//end password verification
+
+  		//make database changes
+		try {
+			$sql = 'UPDATE person SET
+				password = :password
+				WHERE id = :id';
+			$s = $pdo->prepare($sql);
+			$s->bindValue(':password', md5($_POST['newPassword']));
+			$s->bindValue(':id', $_POST['id']);
+			$s->execute();
+		}
+		catch(PDOException $e) {
+			$error = 'Error updating password' . $e->getMessage();
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+			include 'localNav.html.php';
+			include 'error.html.php';
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';		
+			exit();
+		}
+
+		//After successful update, display success message and updated info
+		try {
+			$sql = 'SELECT id, studentid, firstname, lastname, address1, address2, zip, email, type, status FROM person WHERE id = :id';
+			$s = $pdo->prepare($sql);
+			$s->bindValue(':id', $_POST['id']);
+			$s->execute();
+		}
+		catch(PDOException $e) {
+			$error = 'Error updating user details' . $e->getMessage();
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+			include 'localNav.html.php';
+			include 'error.html.php';
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+			exit();
+		}
+
+		//store result from person query in $row
+		$row = $s->fetch();
+
+		//Set variables for populated registration form
+		$panelTitle = 'Edit Profile';
+		$errorMessage = 'Password Updated Successfully';
+		$action = 'editform';
+		$studentid = $row['studentid'];
+		$firstname = $row['firstname'];
+		$lastname = $row['lastname'];
+		$address1 = $row['address1'];
+		$address2 = $row['address2'];
+		$zip = $row['zip'];
+		$email = $row['email'];
+		$type = $row['type'];
+		$status = $row['status'];
+		$id = $row['id'];
+		$button = 'Update User';
+		
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+		include 'localNav.html.php';
+		include 'register_user.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+		exit();
+	}
+	else {
+		$errorMessage = 'Whoops! Looks like you entered the wrong password.<br />';
+	    $id = $_POST['id'];
+		$panelTitle = 'Change Password';
+		$action = 'updatePassword';
+		$button = 'change password';
+
+
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+		include 'localNav.html.php';
+		include 'change_pw.html.php';
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';
+		exit();
+	}
+}
+
 //if user is logged in display user's info also account for logged in user moving back to edit profile
 if (isset($_SESSION['logged']) && !isset($_GET['editform']) || isset($_SESSION['logged']) && isset($_GET['editProfile'])) {
 	//if user is logged in, set email from session
@@ -60,8 +264,8 @@ if (isset($_SESSION['logged']) && !isset($_GET['editform']) || isset($_SESSION['
 if (isset($_GET['addform'])) {
 
 	//check password validity
-	$password = md5($_POST['password']);
-	$confirmPassword = md5($_POST['confirmPassword']);
+	$password = $_POST['password'];
+	$confirmPassword = $_POST['confirmPassword'];
 
 	if ($password == $confirmPassword) {
 
