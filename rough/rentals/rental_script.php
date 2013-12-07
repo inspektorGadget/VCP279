@@ -3,11 +3,17 @@
 include_once $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/magicquotes.inc.php';
 //nav script
 include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/navScript.php';
-$pageTitle = 'User Administration';
+$pageTitle = 'Rental Administration';
 
 //Check for add rental
 //////////////////////
 if (isset($_GET['addRental'])) {
+
+	if (isset($_SESSION['errorMessage'])) {
+		$errorMessage = $_SESSION['errorMessage'];
+		unset($_SESSION['errorMessage']);
+	}
+
 	$panelTitle = 'New Rental';
 	$action = 'addform';
 	$student_id = '';
@@ -66,9 +72,170 @@ if (isset($_GET['addRental'])) {
 }
 //Check for add form
 //////////////////////
+if (isset($_GET['addform'])) {
 
-//Check if edit rental
+	if ($_POST['student_id'] != 'selectStudent' && $_POST['equipment_id'] != 'selectEquipment') {
+		include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
+
+		//get admin id, it's just easier to do it here(also im lazy)
+		try {
+			$sql = 'SELECT id FROM person WHERE email = :email';
+			$s = $pdo->prepare($sql);
+			$s->bindValue(':email', $_SESSION['email']);
+			$s->execute();
+		}
+		catch(PDOException $e) {
+			$error = 'Error finding Admin' . $e->getMessage();
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+			include 'localNav.html.php';
+			include 'error.html.php';
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';		
+			exit();
+		}
+		$admin_id = $s->fetch();
+		//make rental
+		try {
+			$sql = 'INSERT INTO rentals SET
+				admin_id = :admin_id,
+				student_id = :student_id,
+				equipment_id = :equipment_id,
+				date_due = :date_due,
+				rental_status = :out,
+				notes = :notes';
+			$s = $pdo->prepare($sql);
+			$s->bindValue(':admin_id', $admin_id['id']);
+			$s->bindValue(':student_id', $_POST['student_id']);
+			$s->bindValue(':equipment_id', $_POST['equipment_id']);
+			$s->bindValue(':date_due', $_POST['date_due']);
+			$s->bindValue(':out', 'out');
+			$s->bindValue(':notes', $_POST['notes']);
+			$s->execute();
+		}
+		catch(PDOException $e) {
+			$error = 'Error adding rental' . $e->getMessage();
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+			include 'localNav.html.php';
+			include 'error.html.php';
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';		
+			exit();
+		}
+		//set status of equipment to rented and add add student to rented to
+
+		//lazy again
+		try {
+			$sql = 'SELECT firstname, lastname FROM person WHERE id = :student_id';
+			$s = $pdo->prepare($sql);
+			$s->bindValue(':student_id', $_POST['student_id']);
+			$s->execute();
+		}
+		catch(PDOException $e) {
+			$error = 'Error finding Admin' . $e->getMessage();
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+			include 'localNav.html.php';
+			include 'error.html.php';
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';		
+			exit();
+		}
+		$student_name = $s->fetch();
+
+		try {
+			$sql = 'UPDATE  equipment SET  
+			status = :status,
+			rentedTo = :rentedTo
+			WHERE  id = :equipment_id';
+			$s = $pdo->prepare($sql);
+			$s->bindValue(':equipment_id', $_POST['equipment_id']);
+			$s->bindValue(':status', 'rented');
+			$s->bindValue(':rentedTo', $student_name['firstname'].' '.$student_name['lastname']);
+			$s->execute();
+		}
+		catch(PDOException $e) {
+			$error = 'Error updating status of equipment' . $e->getMessage();
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+			include 'localNav.html.php';
+			include 'error.html.php';
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';		
+			exit();
+		}
+		
+		//Submit back to controller index
+		header('Location: ./?listRentals');
+		exit();
+		}
+		else {
+			header('Location: ./?addRental');
+			$_SESSION['errorMessage'] = 'Please fill in all required fields';
+			exit();
+		}
+	
+}
+
+//Check if return rental
 //////////////////////
+if (isset($_POST['action']) && $_POST['action']=='Return Rental') {
+	include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/db.inc.php';
+	
+	try {
+		$sql = 'SELECT equipment_id FROM rentals WHERE rental_id = :rental_id';
+		$s = $pdo->prepare($sql);
+		$s->bindValue(':rental_id', $_POST['rental_id']);
+		$s->execute();
+	}
+	catch(PDOException $e) {
+			$error = 'Error selecting equipment for update' . $e->getMessage();
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+			include 'localNav.html.php';
+			include 'error.html.php';
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';		
+			exit();
+		}
+
+	//store equipment id for further processing
+		$equipment = $s->fetch();
+
+	//first, return rental
+	try {
+			$sql = 'UPDATE  rentals SET  
+			rental_status = :status
+			WHERE  rental_id = :rental_id';
+			$s = $pdo->prepare($sql);
+			$s->bindValue(':rental_id', $_POST['rental_id']);
+			$s->bindValue(':status', 'returned');
+			$s->execute();
+		}
+		catch(PDOException $e) {
+			$error = 'Error returning rental' . $e->getMessage();
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+			include 'localNav.html.php';
+			include 'error.html.php';
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';		
+			exit();
+		}	
+	//then update equipment
+	try {
+			$sql = 'UPDATE  equipment SET  
+			status = :status,
+			rentedTo = :rentedTo
+			WHERE  id = :equipment_id';
+			$s = $pdo->prepare($sql);
+			$s->bindValue(':equipment_id', $equipment['equipment_id']);
+			$s->bindValue(':status', 'available');
+			$s->bindValue(':rentedTo', 'available');
+			$s->execute();
+		}
+		catch(PDOException $e) {
+			$error = 'Error updating equipment' . $e->getMessage();
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/header.html.php';
+			include 'localNav.html.php';
+			include 'error.html.php';
+			include $_SERVER['DOCUMENT_ROOT'] . '/VCP279/rough/includes/footer.html.php';		
+			exit();
+		}	
+
+	//Submit back to controller index
+		header('Location: ./?listRentals');
+		exit();	
+}
 
 //Check for list rentals
 if (isset($_GET['listRentals'])) {

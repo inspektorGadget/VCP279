@@ -1,5 +1,12 @@
 <div class="content">
 <h1><?php htmlout($panelTitle); ?></h1>
+<div id="messages">
+	<?php 
+	if (isset($errorMessage)) {
+		echo "<p class=\"errorColor\">" . $errorMessage . "</p>";
+	}
+?>
+</div>
 <form action="?<?php htmlout($action); ?>" method="post">
 	<table>
 		<tr>
@@ -24,7 +31,7 @@
 			</td>
 			<td>
 				<select name="student_id">
-					<option value"selectStudent">Select Student</option>
+					<option value="selectStudent">Select Student</option>
 					<?php foreach($users as $user): ?>
 					<option value="<?php htmlout($user['id']); ?>">
 						<?php
@@ -41,7 +48,7 @@
 			</td>
 			<td>
 				<select name="equipment_id">
-					<option value"selectEquipment">Select Equipment</option>
+					<option value="selectEquipment">Select Equipment</option>
 					<?php foreach($equipments as $equipment): ?>
 					<option value="<?php htmlout($equipment['id']); ?>">
 						<?php
@@ -65,6 +72,14 @@
 					htmlout($date_created);
 				}
 				?>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<label for="date_due">Date Due:</label>
+			</td>
+			<td>
+				<input type="date" name="date_due">
 			</td>
 		</tr>
 		<tr>

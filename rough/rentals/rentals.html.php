@@ -27,7 +27,7 @@
 		</tr>
 		<tr>
 			<td><input type="submit" name="action" value="Return Rental" /></td>
-			<td><input type="hidden" name="id" value="<?php echo $rental['id']; ?>" /></td>			
+			<td><input type="hidden" name="rental_id" value="<?php echo $rental['id']; ?>" /></td>			
 			<!-- <td><input type="submit" name="action" value="Delete" /></td> -->		
 		</tr>
 		</form>

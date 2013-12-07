@@ -77,11 +77,20 @@
 			</td>
 			<td>
 				<select name="status" id="status">
-					<option value="available" <?php if ($row['status']=='available') {echo "selected=\"selected\"";}?>>available</option>
 					<option value="rented" <?php if ($row['status']=='rented') {echo "selected=\"selected\"";}?>>rented</option>
+					<option value="available" <?php if ($row['status']=='available') {echo "selected=\"selected\"";}?>>available</option>
 					<option value="repair" <?php if ($row['status']=='repair') {echo "selected=\"selected\"";}?>>repair</option>
 					<option value="inactive" <?php if ($row['status']=='inactive') {echo "selected=\"selected\"";}?>>invactive</option>
 				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="errorColor" colspan="2">
+				<?php
+				if ($row['status'] == 'rented') {
+					echo "This equipment is rented. To change it's status please return the rental";
+				}
+				?>
 			</td>
 		</tr>
 		<tr>
